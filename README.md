@@ -9,14 +9,21 @@ A modern, full-stack social media platform for travelers to share their adventur
 - **User Authentication**: Secure login and signup system
 - **User Profiles**: Customizable profiles with bio, location, and avatar
 - **Community Feed**: Share and discover travel posts from the community
-- **Interactive Map**: Explore posts on an interactive world map
+- **Interactive Map**: Explore posts on an interactive world map with click-to-select location
 - **Comments & Likes**: Engage with posts through comments and likes
 - **Create Posts**: Share your travel moments with photos and location data
+- **AI Image Validation**: Deepfake detection to ensure authentic travel photos
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 
 ### Admin Features
 - **Admin Dashboard**: Manage and moderate community posts
 - **Post Management**: Delete inappropriate content
+
+### AI Features
+- **Deepfake Detection**: Automatically validates uploaded images using Vision Transformer (ViT)
+- **Real-time Validation**: Images are checked before post creation
+- **Confidence Scoring**: Shows detection confidence level
+- **Automatic Rejection**: Fake or AI-generated images are automatically rejected
 
 ## 🛠️ Tech Stack
 
@@ -41,6 +48,7 @@ A modern, full-stack social media platform for travelers to share their adventur
 
 - Node.js (v14 or higher)
 - npm or yarn
+- Python 3.8+ (for AI image validation)
 - MySQL (optional - uses JSON file storage as fallback)
 
 ## 🚀 Installation
@@ -62,6 +70,29 @@ npm install
 cd ../client
 npm install
 ```
+
+### 4. Setup AI Service (Deepfake Detection)
+
+#### On Windows:
+```bash
+cd ../server/ai-service
+setup.bat
+```
+
+#### On Linux/Mac:
+```bash
+cd ../server/ai-service
+chmod +x setup.sh
+./setup.sh
+```
+
+Or manually:
+```bash
+cd server/ai-service
+pip install -r requirements.txt
+```
+
+**Note**: The AI model (~350MB) will be downloaded automatically on first use.
 
 ### 4. Configure Environment Variables
 

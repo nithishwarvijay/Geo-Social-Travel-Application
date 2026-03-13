@@ -1,0 +1,71 @@
+╔════════════════════════════════════════════════════════════╗
+║         AI VALIDATION QUICK START GUIDE                   ║
+╚════════════════════════════════════════════════════════════╝
+
+📥 STEP 1: INSTALL PYTHON
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Download: https://www.python.org/downloads/
+2. Run installer
+3. ✅ CHECK "Add Python to PATH" (IMPORTANT!)
+4. Click "Install Now"
+5. Restart your computer
+
+🔧 STEP 2: INSTALL AI DEPENDENCIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Option A - Automatic (Recommended):
+   Double-click: install-ai.bat
+   
+Option B - Manual:
+   cd server\ai-service
+   pip install transformers torch torchvision Pillow
+
+⏱️ This takes 5-10 minutes (downloads ~2GB)
+
+⚙️ STEP 3: ENABLE AI VALIDATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Open: server\.env
+2. Change: ENABLE_AI_VALIDATION=false
+   To:     ENABLE_AI_VALIDATION=true
+3. Save file
+
+🔄 STEP 4: RESTART SERVER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Stop server (Ctrl+C)
+2. cd server
+3. npm run dev
+
+✅ DONE! AI validation is now active!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 WHAT TO EXPECT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Real photos: Accepted (2-5 seconds)
+❌ AI/Fake photos: Rejected with error message
+🔍 First upload: Takes longer (model loading)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🆘 TROUBLESHOOTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"Python not found"
+   → Reinstall Python with "Add to PATH" checked
+   → Restart computer
+
+"pip not found"
+   → Same as above
+
+"Installation failed"
+   → Check internet connection
+   → Try: pip install --upgrade pip
+   → Run install-ai.bat again
+
+"Out of memory"
+   → Close other applications
+   → Need 4GB+ RAM
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 NEED HELP?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Check: INSTALL_AI_VALIDATION.md (detailed guide)
+Or keep AI disabled: ENABLE_AI_VALIDATION=false
+
+╚════════════════════════════════════════════════════════════╝
