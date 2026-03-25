@@ -27,6 +27,16 @@ if (!devBypassAuth) {
 
 app.use('/uploads', express.static(uploadsDir));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 app.use('/api/posts', postsRouter);
 app.use('/api/admin/posts', adminRouter);
 

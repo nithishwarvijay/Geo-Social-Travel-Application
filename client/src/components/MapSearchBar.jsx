@@ -176,7 +176,7 @@ export default function MapSearchBar({ onLocationSelect, placeholder = 'Search f
                                     width: '18px',
                                     height: '18px',
                                     border: '2px solid #e5e7eb',
-                                    borderTopColor: '#ef4444',
+                                    borderTopColor: '#3b82f6',
                                     borderRadius: '50%',
                                     animation: 'spin 0.6s linear infinite',
                                 }} />
@@ -237,7 +237,7 @@ export default function MapSearchBar({ onLocationSelect, placeholder = 'Search f
                                     transition: 'background 0.15s',
                                     fontFamily: 'inherit',
                                 }}
-                                onMouseEnter={(e) => e.currentTarget.style.background = '#fef2f2'}
+                                onMouseEnter={(e) => e.currentTarget.style.background = '#eff6ff'}
                                 onMouseLeave={(e) => e.currentTarget.style.background = 'white'}
                             >
                                 <span style={{ fontSize: '20px', marginTop: '2px', flexShrink: 0 }}>

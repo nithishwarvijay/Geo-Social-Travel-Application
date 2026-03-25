@@ -3,14 +3,19 @@ const path = require('path');
 
 class DeepfakeService {
   constructor() {
-    // Use .venv Python if available, otherwise use system Python
+    // Use .venv Python if available, otherwise fall back to system Python.
+    // The .venv lives at the project root:  <project-root>/.venv/
+    // This file lives at:                  <project-root>/server/services/deepfakeService.js
     const fs = require('fs');
 
-    // Try multiple possible locations for .venv
+    // __dirname is always reliable regardless of cwd at server start-up.
+    const projectRoot = path.resolve(__dirname, '..', '..');
+
     const possiblePaths = [
-      path.join(process.cwd(), '.venv', 'Scripts', 'python.exe'), // If running from server dir
-      path.join(process.cwd(), '..', '.venv', 'Scripts', 'python.exe'), // If .venv is in parent dir
-      path.join(__dirname, '..', '..', '.venv', 'Scripts', 'python.exe'), // Relative to this file
+      path.join(projectRoot, '.venv', 'Scripts', 'python.exe'),          // project root (primary)
+      path.join(process.cwd(), '.venv', 'Scripts', 'python.exe'),        // cwd == project root
+      path.join(process.cwd(), '..', '.venv', 'Scripts', 'python.exe'),  // cwd == server/
+      path.join(__dirname, '..', '..', '.venv', 'Scripts', 'python.exe'), // also project root
     ];
 
     let foundPath = null;

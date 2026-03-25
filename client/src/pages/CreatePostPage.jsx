@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
+import { PenTool, MapPin, Globe, Camera, Image as ImageIcon, Send, Sparkles, Navigation } from 'lucide-react';
 import MapSearchBar from '../components/MapSearchBar';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { useApiAuth } from '../services/useApiAuth';
 
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
+const customEmojiIcon = L.divIcon({
+  html: '<div style="font-size: 36px; text-align: center; line-height: 1; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4));">📍</div>',
+  className: 'custom-emoji-icon',
+  iconSize: [36, 36],
+  iconAnchor: [18, 36],
 });
 
 const initialForm = {
@@ -38,7 +36,7 @@ function LocationMarker({ position, setPosition, setForm, onReverseGeocode }) {
     },
   });
 
-  return position ? <Marker position={position} /> : null;
+  return position ? <Marker position={position} icon={customEmojiIcon} /> : null;
 }
 
 // Helper to fly the map to a position programmatically
@@ -80,7 +78,6 @@ export default function CreatePostPage() {
       if (!res.ok) return;
       const data = await res.json();
       if (data && data.display_name) {
-        // Extract a short, meaningful name
         const addr = data.address || {};
         const parts = [
           addr.tourism || addr.amenity || addr.building || addr.road || addr.neighbourhood || '',
@@ -92,7 +89,7 @@ export default function CreatePostPage() {
         setForm((prev) => ({ ...prev, location_name: shortName }));
       }
     } catch {
-      // Silently fail — user can still type the name manually
+      // Silently fail
     }
   }, []);
 
@@ -122,7 +119,6 @@ export default function CreatePostPage() {
         setGpsActive(true);
         setGpsLoading(false);
 
-        // Reverse geocode to get location name
         await reverseGeocode(lat, lng);
       },
       (err) => {
@@ -158,7 +154,6 @@ export default function CreatePostPage() {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
 
-    // Update marker position if latitude or longitude changes manually
     if (name === 'latitude' || name === 'longitude') {
       const lat = name === 'latitude' ? parseFloat(value) : parseFloat(form.latitude);
       const lng = name === 'longitude' ? parseFloat(value) : parseFloat(form.longitude);
@@ -194,12 +189,10 @@ export default function CreatePostPage() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      // Show AI validation result before navigating
       const aiValidation = response.data?.aiValidation;
       if (aiValidation && aiValidation.verified) {
         setAiResult(aiValidation);
         setValidating(false);
-        // Wait 2.5s to show the AI result, then navigate
         setTimeout(() => navigate('/feed'), 2500);
       } else {
         navigate('/feed');
@@ -225,27 +218,28 @@ export default function CreatePostPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-8 text-center">
-        <h2 className="text-4xl font-bold text-gray-900 mb-2">Share Your</h2>
-        <h3 className="text-4xl font-bold text-red-600 mb-4">ADVENTURE</h3>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+      <div className="page-header">
+        <h2 className="page-title">Share Your</h2>
+        <h3 className="page-title-accent">ADVENTURE</h3>
+        <p className="page-subtitle page-subtitle-center">
           Share your travel moments with our community and inspire others to explore the world
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Form Section */}
-        <section className="bg-white rounded-2xl shadow-xl p-8">
+        <section className="create-form-section">
           {error && (
-            <div className="mb-6 rounded-xl bg-red-50 border border-red-200 p-4">
-              <p className="text-red-700 font-medium">{error}</p>
+            <div className="error-alert">
+              <p>{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-lg font-bold text-gray-900 mb-3">
-                Tell us about your experience
+              <label className="form-label flex items-center gap-2">
+                <PenTool className="w-5 h-5 text-blue-500" />
+                <span>Tell us about your experience</span>
               </label>
               <textarea
                 name="description"
@@ -255,74 +249,88 @@ export default function CreatePostPage() {
                 minLength={3}
                 maxLength={1000}
                 rows={4}
-                className="w-full rounded-xl border-2 border-gray-200 p-4 text-lg focus:border-red-500 focus:outline-none transition-colors"
+                className="form-input form-textarea"
                 placeholder="Share your travel experience and what made it special..."
               />
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-gray-900 mb-3">
-                Location
+              <label className="form-label flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-red-500" />
+                <span>Location</span>
               </label>
               <input
                 name="location_name"
                 value={form.location_name}
                 onChange={handleChange}
                 required
-                className="w-full rounded-xl border-2 border-gray-200 p-4 text-lg focus:border-red-500 focus:outline-none transition-colors"
+                className="form-input"
                 placeholder="Where was this photo taken?"
               />
             </div>
 
-            {/* GPS / Use My Location Button */}
+            {/* GPS Button */}
             <div>
               <button
                 type="button"
                 onClick={getGPSLocation}
                 disabled={gpsLoading}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-[1.02] shadow-md disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white"
+                className="gps-btn"
               >
                 {gpsLoading ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                    <div className="loading-spinner" style={{ width: '20px', height: '20px', borderWidth: '2px', borderTopColor: '#fff' }}></div>
                     <span>Detecting your location...</span>
                   </>
                 ) : (
                   <>
-                    {/* GPS Icon */}
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 2a1 1 0 011 1v2.07A7.003 7.003 0 0118.93 11H21a1 1 0 110 2h-2.07A7.003 7.003 0 0113 18.93V21a1 1 0 11-2 0v-2.07A7.003 7.003 0 015.07 13H3a1 1 0 110-2h2.07A7.003 7.003 0 0111 5.07V3a1 1 0 011-1zm0 5a5 5 0 100 10 5 5 0 000-10zm0 3a2 2 0 110 4 2 2 0 010-4z" />
-                    </svg>
-                    <span>📍 Use My Live Location</span>
+                    <Navigation className="w-5 h-5 mx-1" />
+                    <span>Use My Live Location</span>
                   </>
                 )}
               </button>
 
-              {/* GPS Status Messages */}
+              {/* GPS Status */}
               {gpsActive && !gpsLoading && !gpsError && (
-                <div className="mt-3 flex items-center gap-2 px-4 py-3 bg-green-50 border border-green-200 rounded-xl">
-                  <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                <div className="status-alert status-alert-success">
+                  <span style={{ position: 'relative', display: 'flex', width: '12px', height: '12px' }}>
+                    <span style={{
+                      position: 'absolute',
+                      display: 'inline-flex',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(16, 185, 129, 0.5)',
+                      animation: 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite',
+                    }}></span>
+                    <span style={{
+                      position: 'relative',
+                      display: 'inline-flex',
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      backgroundColor: '#10b981',
+                    }}></span>
                   </span>
-                  <p className="text-green-700 font-medium text-sm">
+                  <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>
                     Live GPS location detected successfully!
                   </p>
                 </div>
               )}
 
               {gpsError && (
-                <div className="mt-3 flex items-center gap-2 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl">
-                  <span className="text-amber-500 text-lg">⚠️</span>
-                  <p className="text-amber-700 font-medium text-sm">{gpsError}</p>
+                <div className="status-alert status-alert-warning">
+                  <span style={{ fontSize: '1.1rem' }}>⚠️</span>
+                  <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{gpsError}</p>
                 </div>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-lg font-bold text-gray-900 mb-3">
-                  Latitude
+                <label className="form-label flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-green-500" />
+                  <span>Latitude</span>
                 </label>
                 <input
                   type="number"
@@ -333,14 +341,15 @@ export default function CreatePostPage() {
                   value={form.latitude}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-xl border-2 border-gray-200 p-4 text-lg focus:border-red-500 focus:outline-none transition-colors bg-gray-50"
+                  className="form-input"
                   placeholder="Auto-detected via GPS"
                 />
               </div>
 
               <div>
-                <label className="block text-lg font-bold text-gray-900 mb-3">
-                  Longitude
+                <label className="form-label flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-green-500" />
+                  <span>Longitude</span>
                 </label>
                 <input
                   type="number"
@@ -351,82 +360,83 @@ export default function CreatePostPage() {
                   value={form.longitude}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-xl border-2 border-gray-200 p-4 text-lg focus:border-red-500 focus:outline-none transition-colors bg-gray-50"
+                  className="form-input"
                   placeholder="Auto-detected via GPS"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-gray-900 mb-3">
-                Upload Photo
+              <label className="form-label flex items-center gap-2">
+                <Camera className="w-5 h-5 text-purple-500" />
+                <span>Upload Photo</span>
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-red-500 transition-colors">
+              <div className="form-file-zone group">
+                <div className="flex justify-center mb-2">
+                  <ImageIcon className="w-10 h-10 text-indigo-400 group-hover:scale-110 transition-transform" />
+                </div>
                 <input
                   type="file"
                   accept="image/*"
                   required
                   onChange={(event) => setImage(event.target.files?.[0] || null)}
-                  className="w-full text-lg"
+                  style={{ fontSize: '1rem' }}
                 />
-                <p className="text-gray-500 mt-2">Choose a beautiful photo to share with the community</p>
+                <span className="form-file-label">Choose a beautiful photo to share with the community</span>
               </div>
             </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-4 rounded-xl text-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="form-submit-btn"
             >
               {submitting ? (
-                <span className="flex items-center justify-center gap-3">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                  <div className="loading-spinner" style={{ width: '24px', height: '24px', borderWidth: '2px', borderTopColor: '#fff' }}></div>
                   {validating ? 'Validating Image...' : 'Creating Post...'}
                 </span>
               ) : (
-                'Share Your Adventure'
+                <div className="flex items-center justify-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  <span>Share Your Adventure</span>
+                </div>
               )}
             </button>
 
             {validating && (
-              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                <div className="flex items-center justify-center gap-3">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                  <p className="text-blue-800 font-medium">
-                    🔍 AI is verifying image authenticity...
-                  </p>
-                </div>
+              <div className="status-alert status-alert-info">
+                <div className="loading-spinner" style={{ width: '20px', height: '20px', borderWidth: '2px', borderTopColor: 'var(--clr-accent)' }}></div>
+                <p style={{ fontWeight: 600 }}>
+                  🔍 AI is verifying image authenticity...
+                </p>
               </div>
             )}
 
             {aiResult && aiResult.verified && (
-              <div className="mt-4 p-4 bg-green-50 border border-green-300 rounded-xl animate-pulse">
-                <div className="flex items-center gap-3 justify-center">
-                  <span className="text-2xl">✅</span>
-                  <div className="text-center">
-                    <p className="text-green-800 font-bold text-lg">AI Verified: Image is Authentic</p>
-                    <p className="text-green-600 text-sm">
-                      Label: {aiResult.label} • Confidence: {(aiResult.confidence * 100).toFixed(1)}%
-                    </p>
-                    <p className="text-green-500 text-xs mt-1">Redirecting to feed...</p>
-                  </div>
+              <div className="status-alert status-alert-ai-verified">
+                <span style={{ fontSize: '1.5rem' }}>✅</span>
+                <div style={{ textAlign: 'center', flex: 1 }}>
+                  <p style={{ fontWeight: 700, fontSize: '1.05rem' }}>AI Verified: Image is Authentic</p>
+                  <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: '4px' }}>
+                    Label: {aiResult.label} • Confidence: {(aiResult.confidence * 100).toFixed(1)}%
+                  </p>
+                  <p style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '4px' }}>Redirecting to feed...</p>
                 </div>
               </div>
             )}
 
             {aiResult && aiResult.verified === false && (
-              <div className="mt-4 p-4 bg-red-50 border border-red-300 rounded-xl">
-                <div className="flex items-center gap-3 justify-center">
-                  <span className="text-2xl">🤖</span>
-                  <div className="text-center">
-                    <p className="text-red-800 font-bold text-lg">AI Rejected: Suspicious Image</p>
-                    <p className="text-red-600 text-sm">{aiResult.message}</p>
-                    {aiResult.confidence && (
-                      <p className="text-red-500 text-xs mt-1">
-                        Confidence: {(aiResult.confidence * 100).toFixed(1)}%
-                      </p>
-                    )}
-                  </div>
+              <div className="status-alert status-alert-ai-rejected">
+                <span style={{ fontSize: '1.5rem' }}>🤖</span>
+                <div style={{ textAlign: 'center', flex: 1 }}>
+                  <p style={{ fontWeight: 700, fontSize: '1.05rem' }}>AI Rejected: Suspicious Image</p>
+                  <p style={{ fontSize: '0.85rem', marginTop: '4px' }}>{aiResult.message}</p>
+                  {aiResult.confidence && (
+                    <p style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '4px' }}>
+                      Confidence: {(aiResult.confidence * 100).toFixed(1)}%
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -434,13 +444,18 @@ export default function CreatePostPage() {
         </section>
 
         {/* Map Section */}
-        <section className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="mb-4">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Select Location on Map</h3>
-            <p className="text-gray-600">Your GPS location is auto-detected, or click the map / search to change it</p>
+        <section className="create-map-section">
+          <div style={{ marginBottom: '16px' }}>
+            <h3 className="flex items-center gap-2" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: '1.4rem', color: 'var(--clr-text)', marginBottom: '8px' }}>
+              <MapPin className="w-6 h-6 text-blue-500" />
+              <span>Select Location on Map</span>
+            </h3>
+            <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.95rem' }}>
+              Your GPS location is auto-detected, or click the map / search to change it
+            </p>
           </div>
 
-          <div className="h-[600px] rounded-xl overflow-hidden border-2 border-gray-200" style={{ position: 'relative' }}>
+          <div style={{ height: '600px', borderRadius: '20px', overflow: 'hidden', border: '2px solid var(--clr-border)', position: 'relative' }}>
             <MapContainer
               center={[20, 0]}
               zoom={2}
@@ -449,6 +464,7 @@ export default function CreatePostPage() {
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; OpenStreetMap contributors"
+                maxZoom={19}
               />
               <LocationMarker
                 position={markerPosition}
@@ -474,10 +490,10 @@ export default function CreatePostPage() {
           </div>
 
           {markerPosition && (
-            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
-              <p className="text-green-800 font-semibold">
+            <div className="status-alert status-alert-success" style={{ marginTop: '16px' }}>
+              <p style={{ fontWeight: 600 }}>
                 📍 Location pinned: {form.latitude}, {form.longitude}
-                {form.location_name && <span className="text-green-600 font-normal"> — {form.location_name}</span>}
+                {form.location_name && <span style={{ fontWeight: 400, opacity: 0.8 }}> — {form.location_name}</span>}
               </p>
             </div>
           )}

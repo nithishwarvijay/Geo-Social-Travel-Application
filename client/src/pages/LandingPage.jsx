@@ -108,7 +108,7 @@ export default function LandingPage() {
             </Link>
             <Link
               to="/signup"
-              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold transition-colors"
             >
               Sign Up
             </Link>
@@ -145,7 +145,7 @@ export default function LandingPage() {
             <div className="flex gap-4 justify-center">
               <Link
                 to={isAuthenticated ? "/feed" : "/login"}
-                className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-colors"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-colors"
               >
                 Explore Feed
               </Link>
@@ -178,7 +178,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Choose Your</h2>
-            <h3 className="text-5xl font-bold text-red-600 mb-8">DESTINATION</h3>
+            <h3 className="text-5xl font-bold text-blue-600 mb-8">DESTINATION</h3>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Discover breathtaking destinations around the world. From tropical paradises to mountain adventures.
             </p>
@@ -196,7 +196,7 @@ export default function LandingPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                   <div className="absolute bottom-6 left-6 text-white">
                     <h4 className="text-2xl font-bold mb-2">{dest.name}</h4>
-                    <p className="text-red-400 font-semibold">{dest.price}</p>
+                    <p className="text-blue-400 font-semibold">{dest.price}</p>
                   </div>
                 </div>
               </div>
@@ -210,7 +210,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Us</h2>
-            <h3 className="text-5xl font-bold text-red-600 mb-8">SPECIALTY</h3>
+            <h3 className="text-5xl font-bold text-blue-600 mb-8">SPECIALTY</h3>
             <p className="text-gray-600 max-w-2xl mx-auto">
               We provide the best travel experience with our unique features and community-driven platform.
             </p>
@@ -233,7 +233,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Travel</h2>
-            <h3 className="text-5xl font-bold text-red-600 mb-8">MEMORIES</h3>
+            <h3 className="text-5xl font-bold text-blue-600 mb-8">MEMORIES</h3>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Explore amazing travel photos shared by our community members from around the world.
             </p>
@@ -254,7 +254,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-red-600 to-red-700 text-white">
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">Ready for Your Next Adventure?</h2>
           <p className="text-xl mb-8 opacity-90">
@@ -263,13 +263,13 @@ export default function LandingPage() {
           <div className="flex gap-4 justify-center">
             <Link
               to={isAuthenticated ? "/feed" : "/login"}
-              className="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-full text-lg font-semibold transition-colors"
+              className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-full text-lg font-semibold transition-colors"
             >
               Explore Now
             </Link>
             <Link
               to={isAuthenticated ? "/signup" : "/signup"}
-              className="border-2 border-white hover:bg-white hover:text-red-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-colors"
+              className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-colors"
             >
               Get Started
             </Link>

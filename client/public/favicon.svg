@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e11d48"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="earth" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <!-- Globe circle -->
+  <circle cx="32" cy="30" r="16" fill="none" stroke="#fff" stroke-width="2.5" opacity="0.95"/>
+  <!-- Globe horizontal line -->
+  <ellipse cx="32" cy="30" rx="16" ry="6" fill="none" stroke="#fff" stroke-width="1.8" opacity="0.7"/>
+  <!-- Globe vertical line -->
+  <ellipse cx="32" cy="30" rx="6" ry="16" fill="none" stroke="#fff" stroke-width="1.8" opacity="0.7"/>
+  <!-- Globe vertical center line -->
+  <line x1="32" y1="14" x2="32" y2="46" stroke="#fff" stroke-width="1.5" opacity="0.4"/>
+  <!-- Globe horizontal center line -->
+  <line x1="16" y1="30" x2="48" y2="30" stroke="#fff" stroke-width="1.5" opacity="0.4"/>
+  <!-- Location pin -->
+  <g transform="translate(40, 38)">
+    <path d="M0-10 C-5.5-10 -10-5.5 -10 0 C-10 7 0 16 0 16 C0 16 10 7 10 0 C10-5.5 5.5-10 0-10Z" fill="#fbbf24" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="3.5" fill="#fff"/>
+  </g>
+</svg>

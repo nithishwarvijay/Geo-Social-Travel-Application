@@ -53,6 +53,8 @@ A modern, full-stack social media platform for travelers to share their adventur
 
 ## 🚀 Installation
 
+### Quick Start (Development)
+
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/nithishwarvijay/Geo-Social-Travel-Application.git
@@ -94,7 +96,7 @@ pip install -r requirements.txt
 
 **Note**: The AI model (~350MB) will be downloaded automatically on first use.
 
-### 4. Configure Environment Variables
+### 5. Configure Environment Variables
 
 #### Backend (.env)
 Create a `server/.env` file:
@@ -112,6 +114,7 @@ DEV_BYPASS_AUTH=true
 DEV_USER_ID=dev_admin_1
 DEV_USER_EMAIL=devadmin@example.com
 
+ENABLE_AI_VALIDATION=true
 CLERK_SECRET_KEY=your_clerk_secret_key
 ```
 
@@ -122,6 +125,36 @@ VITE_API_BASE_URL=http://localhost:5000
 VITE_DISABLE_CLERK=true
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 ```
+
+---
+
+## 🚀 Production Deployment
+
+**Ready to deploy?** See our comprehensive deployment guides:
+
+- **[DEPLOYMENT_READY.md](DEPLOYMENT_READY.md)** - Start here! Quick overview and deployment options
+- **[QUICK_DEPLOY.md](QUICK_DEPLOY.md)** - Fast deployment guide (Docker, VPS, Cloud)
+- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Complete step-by-step instructions
+- **[PRODUCTION_CHECKLIST.md](PRODUCTION_CHECKLIST.md)** - Pre-launch checklist
+
+### Quick Deploy Options:
+
+#### 🐳 Docker (Recommended)
+```bash
+cp .env.docker.example .env
+# Edit .env with your values
+docker-compose up -d
+```
+
+#### 🖥️ VPS/Server
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+#### ☁️ Cloud Platforms
+Supports: Render, Railway, Heroku, AWS, GCP
+See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for details.
 
 ## 🏃 Running the Application
 

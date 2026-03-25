@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
+import { Globe, Home, Map as MapIcon, PlusSquare, Settings, LogOut, LogIn, User } from 'lucide-react';
 
 export default function Header() {
   const disableClerk = String(import.meta.env.VITE_DISABLE_CLERK || '').toLowerCase() === 'true';
@@ -32,46 +33,81 @@ export default function Header() {
 
   if (disableClerk) {
     return (
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:px-6">
-          <div className="flex items-center gap-4 text-sm font-medium">
-            <NavLink to="/" className="text-slate-700 hover:text-slate-900">Feed</NavLink>
-            <NavLink to="/map" className="text-slate-700 hover:text-slate-900">Map</NavLink>
+      <header className="nav-header">
+        <nav className="nav-inner">
+          {/* Brand */}
+          <NavLink to="/feed" className="nav-brand">
+            <div className="nav-brand-icon-wrapper ring-2 ring-blue-100 flex items-center justify-center bg-blue-600 rounded-xl p-1.5 shadow-sm">
+              <Globe className="w-5 h-5 text-white" />
+            </div>
+            <span className="font-bold tracking-tight text-xl text-slate-800 ml-1">GeoSocial</span>
+          </NavLink>
+
+          {/* Nav Links */}
+          <div className="nav-links">
+            <NavLink
+              to="/feed"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            >
+              <Home className="w-4 h-4 nav-link-icon" />
+              <span>Feed</span>
+            </NavLink>
+            <NavLink
+              to="/map"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            >
+              <MapIcon className="w-4 h-4 nav-link-icon" />
+              <span>Map</span>
+            </NavLink>
             {isAuthenticated && (
-              <NavLink to="/create" className="text-slate-700 hover:text-slate-900">Create</NavLink>
+                <NavLink
+                  to="/create"
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                >
+                  <PlusSquare className="w-4 h-4 nav-link-icon" />
+                  <span>Create</span>
+                </NavLink>
             )}
-            <NavLink to="/admin" className="text-red-600 hover:text-red-700">Admin</NavLink>
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `nav-link nav-link-admin ${isActive ? 'active' : ''}`}
+            >
+              <Settings className="w-4 h-4 nav-link-icon" />
+              <span>Admin</span>
+            </NavLink>
           </div>
-          <span className="flex items-center gap-3">
+
+          {/* Actions */}
+          <div className="nav-actions">
             {isAuthenticated && (
-              <NavLink to="/profile" className="text-slate-700 hover:text-slate-900">
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
-                    {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
-                  </div>
-                  <span className="hidden md:inline">{userProfile?.name || 'Profile'}</span>
+              <NavLink to="/profile" className="nav-profile-link">
+                <div className="nav-avatar">
+                  {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
                 </div>
+                <span className="nav-profile-name">{userProfile?.name || 'Profile'}</span>
               </NavLink>
             )}
-            <span className="text-sm text-slate-500">Dev Mode</span>
+            <span className="nav-dev-badge">⚡ Dev</span>
             {isAuthenticated ? (
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white hover:bg-slate-800"
+                className="nav-btn nav-btn-primary group"
               >
-                Logout
+                <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <span>Logout</span>
               </button>
             ) : (
               <button
                 type="button"
                 onClick={handleLogin}
-                className="rounded-md bg-blue-600 px-3 py-2 text-sm text-white hover:bg-blue-700"
+                className="nav-btn nav-btn-accent group"
               >
-                Login
+                <LogIn className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <span>Login</span>
               </button>
             )}
-          </span>
+          </div>
         </nav>
       </header>
     );
@@ -85,22 +121,60 @@ export default function Header() {
   const isAdmin = roles.includes('admin') || role === 'admin';
 
   return (
-    <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:px-6">
-        <div className="flex items-center gap-4 text-sm font-medium">
-          <NavLink to="/" className="text-slate-700 hover:text-slate-900">Feed</NavLink>
-          <NavLink to="/map" className="text-slate-700 hover:text-slate-900">Map</NavLink>
-          <NavLink to="/create" className="text-slate-700 hover:text-slate-900">Create</NavLink>
-          {isAdmin && <NavLink to="/admin" className="text-red-600 hover:text-red-700">Admin</NavLink>}
+    <header className="nav-header">
+      <nav className="nav-inner">
+        <NavLink to="/feed" className="nav-brand">
+          <div className="nav-brand-icon-wrapper ring-2 ring-blue-100 flex items-center justify-center bg-blue-600 rounded-xl p-1.5 shadow-sm">
+            <Globe className="w-5 h-5 text-white" />
+          </div>
+          <span className="font-bold tracking-tight text-xl text-slate-800 ml-1">GeoSocial</span>
+        </NavLink>
+
+        {/* Nav Links */}
+        <div className="nav-links">
+          <NavLink
+            to="/feed"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <Home className="w-4 h-4 nav-link-icon" />
+            <span>Feed</span>
+          </NavLink>
+          <NavLink
+            to="/map"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <MapIcon className="w-4 h-4 nav-link-icon" />
+            <span>Map</span>
+          </NavLink>
+          <NavLink
+            to="/create"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <PlusSquare className="w-4 h-4 nav-link-icon" />
+            <span>Create</span>
+          </NavLink>
+          {isAdmin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `nav-link nav-link-admin ${isActive ? 'active' : ''}`}
+            >
+              <Settings className="w-4 h-4 nav-link-icon" />
+              <span>Admin</span>
+            </NavLink>
+          )}
         </div>
 
-        <button
-          type="button"
-          onClick={() => signOut({ redirectUrl: '/login' })}
-          className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white hover:bg-slate-800"
-        >
-          Sign out
-        </button>
+        {/* Actions */}
+        <div className="nav-actions">
+          <button
+            type="button"
+            onClick={() => signOut({ redirectUrl: '/login' })}
+            className="nav-btn nav-btn-primary group"
+          >
+            <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            <span>Sign out</span>
+          </button>
+        </div>
       </nav>
     </header>
   );

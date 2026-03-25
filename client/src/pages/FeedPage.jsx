@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ThumbsUp, MessageSquare } from 'lucide-react';
 
 import { useApiAuth } from '../services/useApiAuth';
 import Suggestions from '../components/Suggestions';
@@ -81,10 +82,10 @@ export default function FeedPage() {
 
   if (loading) return (
     <div className="mx-auto max-w-6xl">
-      <div className="flex items-center justify-center py-20">
+      <div className="loading-container">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading posts...</p>
+          <div className="loading-spinner mx-auto mb-4"></div>
+          <p className="loading-text">Loading posts...</p>
         </div>
       </div>
     </div>
@@ -95,89 +96,96 @@ export default function FeedPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Feed */}
         <div className="lg:col-span-2">
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold text-gray-900 mb-2">Community</h2>
-            <h3 className="text-4xl font-bold text-red-600 mb-4">FEED</h3>
-            <p className="text-gray-600">Discover amazing travel stories from our community</p>
+          <div className="page-header-left">
+            <h2 className="page-title">Community</h2>
+            <h3 className="page-title-accent">FEED</h3>
+            <p className="page-subtitle">Discover amazing travel stories from our community</p>
           </div>
           
           {error && (
-            <div className="mb-6 rounded-xl bg-red-50 border border-red-200 p-4">
-              <p className="text-red-700 font-medium">{error}</p>
+            <div className="error-alert">
+              <p>{error}</p>
             </div>
           )}
 
-          <div className="space-y-6">
-            {posts.map((post) => (
-              <article key={post.id} className="overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="space-y-0 feed-container bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            {posts.map((post, index) => (
+              <article
+                key={post.id}
+                className="post-card"
+                style={{ animationDelay: `${index * 0.08}s` }}
+              >
                 {/* User Profile Header */}
-                <div className="flex items-center gap-4 p-6 pb-4">
-                  <div className="h-12 w-12 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                <div className="post-card-header">
+                  <div className="post-avatar">
                     {post.user_email ? post.user_email.charAt(0).toUpperCase() : 'U'}
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 text-lg">
+                    <p className="post-user-name">
                       {post.user_email ? post.user_email.split('@')[0] : 'User'}
                     </p>
-                    <p className="text-sm text-gray-500 flex items-center gap-1">
+                    <p className="post-user-location">
                       <span>📍</span> {post.location_name}
                     </p>
                   </div>
                 </div>
                 
-                <img 
-                  src={toImageUrl(post.image_path)} 
-                  alt={post.location_name} 
-                  className="w-full object-cover hover:scale-105 transition-transform duration-500" 
-                  style={{ maxHeight: '600px' }} 
-                />
+                <div className="post-image-wrapper">
+                  <img 
+                    src={toImageUrl(post.image_path)} 
+                    alt={post.location_name} 
+                    className="post-image" 
+                    style={{ maxHeight: '560px' }} 
+                  />
+                </div>
                 
-                <div className="p-6">
-                  <p className="text-gray-800 text-lg leading-relaxed mb-4">{post.description}</p>
+                <div className="post-body">
+                  <p className="post-description">{post.description}</p>
                   
                   {/* Like and Comment Actions */}
-                  <div className="flex items-center justify-between border-t border-gray-200 pt-4 mb-4">
-                    <div className="flex items-center gap-6">
+                  <div className="post-actions">
+                    <div className="post-action-btns">
                       <button 
                         onClick={() => handleLike(post.id)}
-                        className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors"
+                        className="post-action-btn group"
                       >
-                        <span className="text-2xl">❤️</span>
-                        <span className="font-semibold">{post.like_count}</span>
+                        <ThumbsUp className="w-5 h-5 group-hover:scale-110 transition-transform text-blue-500" />
+                        <span>{post.like_count}</span>
                       </button>
                       <button 
                         onClick={() => toggleComments(post.id)}
-                        className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
+                        className="post-action-btn group"
                       >
-                        <span className="text-2xl">💬</span>
-                        <span className="font-semibold">{comments[post.id]?.length || 0}</span>
+                        <MessageSquare className="w-5 h-5 group-hover:scale-110 transition-transform text-gray-500" />
+                        <span>{comments[post.id]?.length || 0}</span>
                       </button>
                     </div>
                     <button 
                       type="button" 
-                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg" 
+                      className="post-like-btn" 
                       onClick={() => handleLike(post.id)}
                     >
+                      <ThumbsUp className="w-4 h-4 mr-1" />
                       Like
                     </button>
                   </div>
 
                   {/* Comments Section */}
                   {showComments[post.id] && (
-                    <div className="border-t border-gray-200 pt-4">
+                    <div className="comments-section">
                       {/* Add Comment */}
-                      <div className="flex gap-3 mb-4">
+                      <div className="comment-input-row">
                         <input
                           type="text"
                           value={newComment[post.id] || ''}
                           onChange={(e) => setNewComment((prev) => ({ ...prev, [post.id]: e.target.value }))}
                           onKeyPress={(e) => e.key === 'Enter' && handleAddComment(post.id)}
                           placeholder="Add a comment..."
-                          className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-full focus:border-red-500 focus:outline-none transition-colors"
+                          className="comment-input"
                         />
                         <button
                           onClick={() => handleAddComment(post.id)}
-                          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300"
+                          className="comment-post-btn"
                         >
                           Post
                         </button>
@@ -186,23 +194,23 @@ export default function FeedPage() {
                       {/* Comments List */}
                       <div className="space-y-3 max-h-96 overflow-y-auto">
                         {comments[post.id]?.map((comment) => (
-                          <div key={comment.id} className="flex gap-3 bg-gray-50 rounded-xl p-4">
-                            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0">
+                          <div key={comment.id} className="comment-item">
+                            <div className="comment-avatar">
                               {comment.user_email ? comment.user_email.charAt(0).toUpperCase() : 'U'}
                             </div>
                             <div className="flex-1">
-                              <p className="font-bold text-gray-900 text-sm">
+                              <p className="comment-user">
                                 {comment.user_email ? comment.user_email.split('@')[0] : 'User'}
                               </p>
-                              <p className="text-gray-800 mt-1">{comment.text}</p>
-                              <p className="text-xs text-gray-500 mt-1">
+                              <p className="comment-text">{comment.text}</p>
+                              <p className="comment-date">
                                 {new Date(comment.created_at).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
                         ))}
                         {comments[post.id]?.length === 0 && (
-                          <p className="text-center text-gray-500 py-4">No comments yet. Be the first to comment!</p>
+                          <p className="text-center py-4" style={{ color: 'var(--clr-text-muted)' }}>No comments yet. Be the first to comment!</p>
                         )}
                       </div>
                     </div>

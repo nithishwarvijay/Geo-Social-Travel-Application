@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Users, Flame, Zap, Camera, Map } from 'lucide-react';
 
 export default function Suggestions() {
   const suggestions = [
@@ -57,26 +58,27 @@ export default function Suggestions() {
   return (
     <div className="space-y-6">
       {/* Suggested Users */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="font-bold text-gray-900 text-xl mb-6">Suggested for you</h3>
-        <div className="space-y-4">
+      <div className="sidebar-card" style={{ animationDelay: '0.1s' }}>
+        <h3 className="sidebar-title">
+          <span className="sidebar-title-icon"><Users className="w-5 h-5 text-blue-500" /></span>
+          Suggested for you
+        </h3>
+        <div className="space-y-3">
           {suggestions.map((user) => (
-            <div key={user.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center text-white font-bold shadow-lg">
+            <div key={user.id} className="suggestion-item">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div className="suggestion-avatar">
                   {user.avatar}
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900">{user.name}</p>
-                  <p className="text-sm text-gray-500">@{user.username}</p>
-                  <p className="text-xs text-gray-400">{user.mutualFriends} mutual friends</p>
+                  <p style={{ fontWeight: 700, color: 'var(--clr-text)', fontSize: '0.9rem' }}>{user.name}</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)' }}>@{user.username}</p>
+                  <p style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{user.mutualFriends} mutual friends</p>
                 </div>
               </div>
               <button
-                className={`px-4 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
-                  user.isFollowing
-                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 shadow-lg'
+                className={`follow-btn ${
+                  user.isFollowing ? 'follow-btn-secondary' : 'follow-btn-primary'
                 }`}
               >
                 {user.isFollowing ? 'Following' : 'Follow'}
@@ -84,55 +86,55 @@ export default function Suggestions() {
             </div>
           ))}
         </div>
-        <Link to="/explore" className="block text-center text-red-600 hover:text-red-700 font-semibold mt-6 py-2 rounded-full hover:bg-red-50 transition-colors">
-          See all suggestions
+        <Link to="/explore" className="sidebar-link">
+          See all suggestions →
         </Link>
       </div>
 
       {/* Trending Places */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="font-bold text-gray-900 text-xl mb-6">Trending Places</h3>
-        <div className="space-y-4">
+      <div className="sidebar-card" style={{ animationDelay: '0.2s' }}>
+        <h3 className="sidebar-title">
+          <span className="sidebar-title-icon"><Flame className="w-5 h-5 text-orange-500" /></span>
+          Trending Places
+        </h3>
+        <div className="space-y-2">
           {trendingPlaces.map((place, index) => (
-            <div key={index} className="flex items-center gap-4 cursor-pointer hover:bg-gray-50 p-3 rounded-xl transition-colors">
+            <div key={index} className="trending-item">
               <img
                 src={place.image}
                 alt={place.name}
-                className="h-14 w-14 rounded-xl object-cover shadow-md"
+                className="trending-img"
               />
               <div>
-                <p className="font-bold text-gray-900">{place.name}</p>
-                <p className="text-sm text-gray-500">{place.posts.toLocaleString()} posts</p>
+                <p style={{ fontWeight: 700, color: 'var(--clr-text)', fontSize: '0.9rem' }}>{place.name}</p>
+                <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)' }}>{place.posts.toLocaleString()} posts</p>
               </div>
             </div>
           ))}
         </div>
-        <Link to="/explore" className="block text-center text-red-600 hover:text-red-700 font-semibold mt-6 py-2 rounded-full hover:bg-red-50 transition-colors">
-          Explore more places
+        <Link to="/explore" className="sidebar-link">
+          Explore more places →
         </Link>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="font-bold text-gray-900 text-xl mb-6">Quick Actions</h3>
-        <div className="space-y-3">
-          <Link
-            to="/create"
-            className="flex items-center gap-4 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-300 group"
-          >
-            <div className="h-12 w-12 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-              <span className="text-white text-xl">📸</span>
+      <div className="sidebar-card" style={{ animationDelay: '0.3s' }}>
+        <h3 className="sidebar-title">
+          <span className="sidebar-title-icon"><Zap className="w-5 h-5 text-yellow-500" /></span>
+          Quick Actions
+        </h3>
+        <div className="space-y-2">
+          <Link to="/create" className="quick-action">
+            <div className="quick-action-icon" style={{ background: 'linear-gradient(135deg, #10b981, #059669)', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)' }}>
+              <span style={{ color: '#fff' }}><Camera className="w-5 h-5" /></span>
             </div>
-            <span className="font-semibold text-gray-700 group-hover:text-red-600">Share a moment</span>
+            <span className="quick-action-label">Share a moment</span>
           </Link>
-          <Link
-            to="/map"
-            className="flex items-center gap-4 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-300 group"
-          >
-            <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-              <span className="text-white text-xl">🗺️</span>
+          <Link to="/map" className="quick-action">
+            <div className="quick-action-icon" style={{ background: 'linear-gradient(135deg, var(--clr-accent), #7c3aed)', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.25)' }}>
+              <span style={{ color: '#fff' }}><Map className="w-5 h-5" /></span>
             </div>
-            <span className="font-semibold text-gray-700 group-hover:text-red-600">Explore map</span>
+            <span className="quick-action-label">Explore map</span>
           </Link>
         </div>
       </div>
